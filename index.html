@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dish Report App</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f5f3;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .app { width: 100%; max-width: 580px; }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 2rem;
+    }
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    .step.active { color: #1a1a1a; font-weight: 600; }
+    .step.done { color: #888; }
+
+    .step-num {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      border: 1px solid #ccc;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; flex-shrink: 0;
+    }
+
+    .step.active .step-num { background: #1a1a1a; color: #fff; border-color: transparent; }
+    .step.done .step-num { background: #eee; }
+    .step-sep { flex: 1; height: 1px; background: #e0e0e0; margin: 0 10px; }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .label {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border 0.15s;
+    }
+
+    input[type="text"]:focus { border-color: #999; }
+
+    .ingredient-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .ingredient-row input { flex: 1; }
+
+    .remove-btn {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      background: transparent;
+      cursor: pointer;
+      font-size: 18px;
+      color: #aaa;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .remove-btn:hover { background: #fff0f0; color: #e05; border-color: #fcc; }
+
+    .add-btn {
+      font-size: 13px;
+      color: #3b82f6;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      margin-top: 4px;
+      font-family: inherit;
+    }
+
+    .add-btn:hover { text-decoration: underline; }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 1rem; }
+
+    button.primary {
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    button.primary:hover { opacity: 0.85; }
+
+    button.secondary {
+      background: transparent;
+      color: #1a1a1a;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 9px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    button.secondary:hover { background: #f5f5f3; }
+
+    .json-block {
+      background: #f8f8f6;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+
+    .json-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .copy-btn {
+      font-size: 12px;
+      color: #888;
+      background: none;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 3px 10px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .copy-btn:hover { background: #f0f0f0; }
+
+    .report-title { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+    .report-meta { font-size: 13px; color: #888; margin-bottom: 1rem; }
+    .report-ing-label { font-size: 13px; color: #888; margin-bottom: 6px; }
+
+    .ing-list { padding-left: 1.2rem; }
+    .ing-list li { margin-bottom: 5px; font-size: 15px; }
+
+    .report-summary {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: #f5f5f3;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <h1>Dish Report App</h1>
+  <p class="subtitle">Enter a dish, convert to JSON, generate a report.</p>
+
+  <div class="step-indicator">
+    <div class="step active" id="si1"><div class="step-num">1</div> Input</div>
+    <div class="step-sep"></div>
+    <div class="step" id="si2"><div class="step-num">2</div> JSON</div>
+    <div class="step-sep"></div>
+    <div class="step" id="si3"><div class="step-num">3</div> Report</div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="step-panel active" id="panel1">
+    <div class="card">
+      <span class="label">Dish name</span>
+      <input type="text" id="dish-name" placeholder="e.g. Spaghetti Carbonara" />
+    </div>
+    <div class="card">
+      <span class="label">Ingredients</span>
+      <div id="ingredients-list">
+        <div class="ingredient-row">
+          <input type="text" placeholder="e.g. 200g pasta" />
+          <button class="remove-btn" onclick="removeRow(this)">×</button>
+        </div>
+      </div>
+      <button class="add-btn" onclick="addRow()">+ Add ingredient</button>
+    </div>
+    <div class="btn-row">
+      <button class="primary" onclick="goToStep2()">Convert to JSON →</button>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step-panel" id="panel2">
+    <div class="card">
+      <div class="json-header">
+        <span class="label" style="margin:0">JSON output</span>
+        <button class="copy-btn" onclick="copyJSON()">Copy</button>
+      </div>
+      <div class="json-block" id="json-output"></div>
+    </div>
+    <div class="btn-row">
+      <button class="secondary" onclick="goToStep1()">← Back</button>
+      <button class="primary" onclick="goToStep3()">Generate report →</button>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step-panel" id="panel3">
+    <div class="card" id="report-output"></div>
+    <div class="btn-row">
+      <button class="secondary" onclick="goToStep2()">← Back to JSON</button>
+      <button class="secondary" onclick="startOver()">Start over</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let dishData = {};
+
+  function addRow() {
+    const list = document.getElementById('ingredients-list');
+    const row = document.createElement('div');
+    row.className = 'ingredient-row';
+    row.innerHTML = '<input type="text" placeholder="e.g. 100ml cream" style="flex:1" /><button class="remove-btn" onclick="removeRow(this)">×</button>';
+    list.appendChild(row);
+  }
+
+  function removeRow(btn) {
+    const rows = document.querySelectorAll('.ingredient-row');
+    if (rows.length > 1) btn.parentElement.remove();
+  }
+
+  function setStep(n) {
+    ['panel1', 'panel2', 'panel3'].forEach((id, i) => {
+      document.getElementById(id).classList.toggle('active', i + 1 === n);
+    });
+    ['si1', 'si2', 'si3'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.classList.remove('active', 'done');
+      if (i + 1 === n) el.classList.add('active');
+      else if (i + 1 < n) el.classList.add('done');
+    });
+  }
+
+  function goToStep1() { setStep(1); }
+
+  function goToStep2() {
+    const name = document.getElementById('dish-name').value.trim();
+    if (!name) { alert('Please enter a dish name.'); return; }
+
+    const rows = document.querySelectorAll('#ingredients-list .ingredient-row input');
+    const ingredients = [];
+    rows.forEach(r => { if (r.value.trim()) ingredients.push(r.value.trim()); });
+    if (ingredients.length === 0) { alert('Please add at least one ingredient.'); return; }
+
+    dishData = {
+      dish: name,
+      ingredient_count: ingredients.length,
+      ingredients: ingredients,
+      created_at: new Date().toISOString()
+    };
+
+    document.getElementById('json-output').textContent = JSON.stringify(dishData, null, 2);
+    setStep(2);
+  }
+
+  function goToStep3() {
+    const d = dishData;
+    const date = new Date(d.created_at).toLocaleDateString('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+    const ingHTML = d.ingredients.map(i => `<li>${i}</li>`).join('');
+    document.getElementById('report-output').innerHTML = `
+      <p class="report-title">${d.dish}</p>
+      <p class="report-meta">Report generated on ${date}</p>
+      <p class="report-ing-label">Ingredients (${d.ingredient_count})</p>
+      <ul class="ing-list">${ingHTML}</ul>
+      <div class="report-summary">
+        This dish uses <strong>${d.ingredient_count}</strong> ingredient${d.ingredient_count !== 1 ? 's' : ''}.
+        The data was captured from user input, structured as JSON, and rendered into this report.
+      </div>
+    `;
+    setStep(3);
+  }
+
+  function copyJSON() {
+    navigator.clipboard.writeText(JSON.stringify(dishData, null, 2));
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  }
+
+  function startOver() {
+    document.getElementById('dish-name').value = '';
+    document.querySelectorAll('#ingredients-list .ingredient-row').forEach((r, i) => {
+      if (i > 0) r.remove();
+      else r.querySelector('input').value = '';
+    });
+    dishData = {};
+    setStep(1);
+  }
+</script>
+</body>
+</html>

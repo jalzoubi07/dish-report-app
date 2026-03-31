@@ -9,7 +9,7 @@
 
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f5f5f3;
+      background: linear-gradient(135deg, #5bc8f5, #a87fd4);
       color: #1a1a1a;
       min-height: 100vh;
       display: flex;
@@ -27,7 +27,7 @@
 
     .subtitle {
       font-size: 14px;
-      color: #888;
+      color: #000000;
       margin-bottom: 2rem;
     }
 
@@ -42,27 +42,27 @@
       align-items: center;
       gap: 8px;
       font-size: 13px;
-      color: #aaa;
+      color: #000000;
     }
 
     .step.active { color: #1a1a1a; font-weight: 600; }
-    .step.done { color: #888; }
+    .step.done { color: #000000; }
 
     .step-num {
       width: 24px; height: 24px;
       border-radius: 50%;
-      border: 1px solid #ccc;
+      border: 1px solid #000000;
       display: flex; align-items: center; justify-content: center;
       font-size: 12px; flex-shrink: 0;
     }
 
-    .step.active .step-num { background: #1a1a1a; color: #fff; border-color: transparent; }
-    .step.done .step-num { background: #eee; }
+    .step.active .step-num { background: #1a1a1a; color: #c8e5f0; border-color: transparent; }
+    .step.done .step-num { background: #ffffff; }
     .step-sep { flex: 1; height: 1px; background: #e0e0e0; margin: 0 10px; }
 
     .card {
-      background: #fff;
-      border: 1px solid #e8e8e8;
+      background: #c8e5f0;
+      border: 1px solid #c8e5f0;
       border-radius: 12px;
       padding: 1.25rem;
       margin-bottom: 1rem;
@@ -70,7 +70,7 @@
 
     .label {
       font-size: 13px;
-      color: #888;
+      color: rgb(13, 38, 83);
       margin-bottom: 8px;
       display: block;
     }
@@ -78,7 +78,7 @@
     input[type="text"] {
       width: 100%;
       padding: 9px 12px;
-      border: 1px solid #e0e0e0;
+      border: 1px solid #000000;
       border-radius: 8px;
       font-size: 15px;
       font-family: inherit;
@@ -100,16 +100,16 @@
     .remove-btn {
       width: 30px; height: 30px;
       border-radius: 8px;
-      border: 1px solid #e0e0e0;
+      border: 1px solid #5c5c62;
       background: transparent;
       cursor: pointer;
       font-size: 18px;
-      color: #aaa;
+      color: #000000;
       line-height: 1;
       flex-shrink: 0;
     }
 
-    .remove-btn:hover { background: #fff0f0; color: #e05; border-color: #fcc; }
+    .remove-btn:hover { background: #000000; color: rgb(0, 0, 0); border-color: rgb(0, 0, 0); }
 
     .add-btn {
       font-size: 13px;
@@ -141,8 +141,8 @@
 
     button.secondary {
       background: transparent;
-      color: #1a1a1a;
-      border: 1px solid #ccc;
+      color: #2c2c2c;
+      border: 1px solid #000000;
       border-radius: 8px;
       padding: 9px 20px;
       font-size: 14px;
@@ -173,20 +173,20 @@
 
     .copy-btn {
       font-size: 12px;
-      color: #888;
+      color: #000000;
       background: none;
-      border: 1px solid #ddd;
+      border: 1px solid #303030;
       border-radius: 6px;
       padding: 3px 10px;
       cursor: pointer;
       font-family: inherit;
     }
 
-    .copy-btn:hover { background: #f0f0f0; }
+    .copy-btn:hover { background: #919191; }
 
     .report-title { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
-    .report-meta { font-size: 13px; color: #888; margin-bottom: 1rem; }
-    .report-ing-label { font-size: 13px; color: #888; margin-bottom: 6px; }
+    .report-meta { font-size: 13px; color: #272727; margin-bottom: 1rem; }
+    .report-ing-label { font-size: 13px; color: #6b6b6b; margin-bottom: 6px; }
 
     .ing-list { padding-left: 1.2rem; }
     .ing-list li { margin-bottom: 5px; font-size: 15px; }
